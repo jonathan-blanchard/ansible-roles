@@ -6,6 +6,22 @@
   gather_facts: false
   tasks:
 
+    - debug:
+        var: playbook_dir
+
+    - find:
+        paths: "{{ playbook_dir }}"
+      register: prout
+
+    - debug:
+        var: prout
+
+    - command: env
+      register: prout
+
+    - debug:
+        var: prout
+
     # Latest
     - tags: [latest]
       block:
@@ -19,7 +35,7 @@
       always:
         - name: Goss
           command: >
-            goss --gossfile {{ test }}.goss.yml --vars-inline "{tags: [latest]}" validate
+            goss --gossfile {{ playbook_dir }}/{{ test }}.goss.yml --vars-inline "{tags: [latest]}" validate
 
     # Version
     - tags: [version]
@@ -34,4 +50,4 @@
       always:
         - name: Goss
           command: >
-            goss --gossfile {{ test }}.goss.yml --vars-inline "{tags: [version]}" validate
+            goss --gossfile {{ playbook_dir }}/{{ test }}.goss.yml --vars-inline "{tags: [version]}" validate
